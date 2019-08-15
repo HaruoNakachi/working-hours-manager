@@ -1,4 +1,4 @@
-# working
+# working-hours-manager
 
 > A Vue.js project
 

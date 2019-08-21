@@ -1,6 +1,11 @@
 <template>
 
   <div class="p-listDate">
+    <ul id="example-1">
+      <li v-for="post in posts" :key="post.id">
+        {{ post.title }}
+      </li>
+    </ul>
     <v-content>
       <v-tabs v-model="tab" background-color="deep-purple accent-4" class="elevation-2 tab-wrap" dark
         :centered="centered"
@@ -722,28 +727,46 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
+export const posts = gql`
+  query posts {
+    posts {
+      title
+      description
+      date
+    }
+  }
+`
+
 export default {
   name: 'ListDate',
-  data: function () {
-    return {
-      time: [
-        {
-          id: 1,
-          v: '2019/07'
-        },
-        {
-          id: 2,
-          v: '2019/08'
-        }
-      ],
-      tab: null,
-      icons: false,
-      centered: false,
-      grow: false,
-      vertical: false,
-      prevIcon: false,
-      nextIcon: false,
-      right: false
+  data: () => ({
+    loading: 0,
+    posts: null,
+    time: [
+      {
+        id: 1,
+        v: '2019/07'
+      },
+      {
+        id: 2,
+        v: '2019/08'
+      }
+    ],
+    tab: null,
+    icons: false,
+    centered: false,
+    grow: false,
+    vertical: false,
+    prevIcon: false,
+    nextIcon: false,
+    right: false
+  }),
+  apollo: {
+    $loadingKey: 'loading',
+    posts: {
+      query: posts
     }
   }
 }

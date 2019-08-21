@@ -14,7 +14,14 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.12",
+    "apollo-link-http": "^1.5.15",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
     "vue": "^2.5.2",
+    "vue-apollo": "^3.0.0-rc.2",
     "vue-router": "^3.0.1",
     "vuetify": "^2.0.6"
   },
@@ -72,6 +79,7 @@
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
+    "vue-cli-plugin-apollo": "^0.21.0",
     "vue-jest": "^1.0.2",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",

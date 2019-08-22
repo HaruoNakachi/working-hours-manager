@@ -6,13 +6,13 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
-
+import vuemoment from 'vue-moment'
 import router from './router'
 import vuetify from '@/plugins/vuetify'
 
 Vue.config.productionTip = false
 
-const GRAPHCMS_API = 'https://api-apeast.graphcms.com/v1/cjzleh43v8xej01gjexu13rr4/master'
+const GRAPHCMS_API = 'https://api-apeast.graphcms.com/v1/cjzi37p5w0odf01ef3ouy8599/master'
 
 const apolloClient = new ApolloClient({
   link: new HttpLink({ uri: GRAPHCMS_API }),
@@ -20,6 +20,7 @@ const apolloClient = new ApolloClient({
 })
 
 Vue.use(VueApollo)
+Vue.use(vuemoment)
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient

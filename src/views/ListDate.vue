@@ -1,11 +1,7 @@
 <template>
 
   <div class="p-listDate">
-    <ul id="example-1">
-      <li v-for="post in posts" :key="post.id">
-        {{ post.title }}
-      </li>
-    </ul>
+
     <v-content>
       <v-tabs v-model="tab" background-color="deep-purple accent-4" class="elevation-2 tab-wrap" dark
         :centered="centered"
@@ -49,498 +45,32 @@
                 </v-row>
               </div>
               <div class="table-body">
-                <v-row>
+                <v-row v-for="working in workings" :key="working.id">
                   <v-col cols="md-1">
-                    <div class="center-line">7/1 (月)</div>
+                    <div class="center-line">{{ working.day | moment("M/D") }} (月)</div>
                   </v-col>
                   <v-col cols="md-1">
                     <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
+                      {{ working.start | moment("HH:ss") }}
                     </div>
                   </v-col>
                   <v-col cols="md-1">
                     <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
+                      {{ working.end | moment("HH:ss") }}
                     </div>
                   </v-col>
                   <v-col cols="md-1">
                     <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
+                      {{ working.break }}
                       <span class="spect">h</span>
                     </div>
                   </v-col>
                   <v-col cols="md-1">
-                    <div class="center-line">8h</div>
+                    <div class="center-line"> {{ subtotal(working.end, working.start) | duration('hours') }} h</div>
                   </v-col>
                   <v-col class="d-none d-md-flex d-lg-flex">
                     <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/3 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/1 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/3 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/1 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">7/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
+                      {{ working.memo }}
                     </div>
                   </v-col>
                 </v-row>
@@ -728,13 +258,15 @@
 
 <script>
 import gql from 'graphql-tag'
-
-export const posts = gql`
-  query posts {
-    posts {
-      title
-      description
-      date
+import moment from 'moment'
+export const workings = gql`
+  query workings {
+    workings {
+      day
+      start
+      end
+      memo
+      break
     }
   }
 `
@@ -743,7 +275,7 @@ export default {
   name: 'ListDate',
   data: () => ({
     loading: 0,
-    posts: null,
+    workings: null,
     time: [
       {
         id: 1,
@@ -761,12 +293,18 @@ export default {
     vertical: false,
     prevIcon: false,
     nextIcon: false,
-    right: false
+    right: false,
+    endDay: ''
   }),
   apollo: {
     $loadingKey: 'loading',
-    posts: {
-      query: posts
+    workings: {
+      query: workings
+    }
+  },
+  methods: {
+    subtotal: function (eD, sD) {
+      return parseInt(moment(eD).format('x')) - parseInt(moment(sD).format('x'))
     }
   }
 }

@@ -9,7 +9,6 @@ import VueApollo from 'vue-apollo'
 import vuemoment from 'vue-moment'
 import router from './router'
 import vuetify from '@/plugins/vuetify'
-
 Vue.config.productionTip = false
 
 const GRAPHCMS_API = 'https://api-apeast.graphcms.com/v1/cjzi37p5w0odf01ef3ouy8599/master'

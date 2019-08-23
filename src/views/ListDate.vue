@@ -1,7 +1,9 @@
 <template>
 
   <div class="p-listDate">
-
+    <v-alert v-if="success" type="success">
+      Success
+    </v-alert>
     <v-content>
       <v-tabs v-model="tab" background-color="deep-purple accent-4" class="elevation-2 tab-wrap" dark
         :centered="centered"
@@ -14,9 +16,6 @@
       >
         <v-tabs-slider></v-tabs-slider>
         <v-tab :href="`#tab-1`">
-          2019/07
-        </v-tab>
-        <v-tab :href="`#tab-2`">
           2019/08
         </v-tab>
         <v-tab-item value="tab-1" class="tab-content">
@@ -27,10 +26,10 @@
                   <v-col cols="md-1">
                     Day
                   </v-col>
-                  <v-col cols="md-1">
+                  <v-col cols="md-2">
                     Start at
                   </v-col>
-                  <v-col cols="md-1">
+                  <v-col cols="md-2">
                     End at
                   </v-col>
                   <v-col cols="md-1">
@@ -42,235 +41,36 @@
                   <v-col class="d-none d-md-flex d-lg-flex">
                     Memo
                   </v-col>
+                  <v-col cols="md-1"></v-col>
                 </v-row>
               </div>
               <div class="table-body">
-                <v-row v-for="working in workings" :key="working.id">
-                  <v-col cols="md-1">
-                    <div class="center-line">{{ working.day | moment("M/D") }} (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      {{ working.start | moment("HH:ss") }}
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      {{ working.end | moment("HH:ss") }}
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      {{ working.break }}
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line"> {{ subtotal(working.end, working.start) | duration('hours') }} h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      {{ working.memo }}
-                    </div>
-                  </v-col>
-                </v-row>
-
-              </div>
-            </v-container>
-          </template>
-        </v-tab-item>
-        <v-tab-item value="tab-2" class="tab-content">
-          <template>
-            <v-container fluid class="table-wrap">
-              <div class="table-header">
-                <v-row>
-                  <v-col cols="md-1">
-                    Day
-                  </v-col>
-                  <v-col cols="md-1">
-                    Start at
-                  </v-col>
-                  <v-col cols="md-1">
-                    End at
-                  </v-col>
-                  <v-col cols="md-1">
-                    Break
-                  </v-col>
-                  <v-col cols="md-1">
-                    Subtotal
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    Memo
-                  </v-col>
-                </v-row>
-              </div>
-              <div class="table-body">
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">8/1 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">8/2 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="md-1">
-                    <div class="center-line">8/3 (月)</div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">:</span>
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                      <span class="spect">h</span>
-                    </div>
-                  </v-col>
-                  <v-col cols="md-1">
-                    <div class="center-line">8h</div>
-                  </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
-                    <div class="input-area">
-                      <v-text-field
-                        class="header-text-field-input"
-                      ></v-text-field>
-                    </div>
-                  </v-col>
-                </v-row>
+                <working-hour
+                  v-for="working in workings"
+                  :key="working.id"
+                  :working="working"
+                  :edit="false"
+                  @clicked="onClickChild">
+                </working-hour>
               </div>
             </v-container>
           </template>
         </v-tab-item>
       </v-tabs>
     </v-content>
-    <v-footer>
+    <!-- <v-footer>
       <div class="footer-btn">
         <v-btn class="ma-2" tile outlined color="success">
           <v-icon left>mdi-check-bold</v-icon> Save
         </v-btn>
       </div>
-    </v-footer>
+    </v-footer> -->
   </div>
 </template>
 
 <script>
-import gql from 'graphql-tag'
-import moment from 'moment'
-export const workings = gql`
-  query workings {
-    workings {
-      day
-      start
-      end
-      memo
-      break
-    }
-  }
-`
-
+import { WORKING_HOURS } from '../constants/graphql'
+import WorkingHour from './WorkingHour'
 export default {
   name: 'ListDate',
   data: () => ({
@@ -294,17 +94,24 @@ export default {
     prevIcon: false,
     nextIcon: false,
     right: false,
-    endDay: ''
+    endDay: '',
+    success: false
   }),
+  components: {
+    WorkingHour
+  },
   apollo: {
     $loadingKey: 'loading',
     workings: {
-      query: workings
+      query: WORKING_HOURS
     }
   },
   methods: {
-    subtotal: function (eD, sD) {
-      return parseInt(moment(eD).format('x')) - parseInt(moment(sD).format('x'))
+    onClickChild (value) {
+      this.success = value
+      setTimeout(() => {
+        this.success = false
+      }, 1000)
     }
   }
 }
@@ -324,15 +131,15 @@ export default {
     }
     .input-area {
       display: flex;
-      align-items: center;
       width: 100%;
       .spect {
         margin: 0 5px;
+        display: flex;
+        align-items: center;
       }
     }
     .center-line {
       display: flex;
-      align-items: center;
       height: 100%;
     }
     .table {

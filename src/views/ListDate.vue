@@ -71,6 +71,7 @@
 <script>
 import { WORKING_HOURS } from '../constants/graphql'
 import WorkingHour from './WorkingHour'
+
 export default {
   name: 'ListDate',
   data: () => ({
@@ -106,12 +107,16 @@ export default {
       query: WORKING_HOURS
     }
   },
+  computed: {},
   methods: {
     onClickChild (value) {
       this.success = value
       setTimeout(() => {
         this.success = false
       }, 1000)
+    },
+    changed: function (event) {
+      this.$store.commit('change', event.target.value)
     }
   }
 }

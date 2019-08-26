@@ -5,7 +5,7 @@ import ListDate from '@/views/ListDate'
 import DetailDate from '@/views/DetailDate'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -21,6 +21,20 @@ export default new Router({
       path: '/detail',
       name: 'DetailDate',
       component: DetailDate
-    }
-  ]
+    },
+    { path: '*', redirect: '/' }
+  ],
+  mode: 'history'
 })
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/']
+  const authRequired = !publicPages.includes(to.path)
+  const loggedIn = localStorage.getItem('user')
+  if (authRequired && !loggedIn) {
+    return next('/')
+  }
+  next()
+})
+
+export default router

@@ -45,8 +45,8 @@ export const SIGNIN = gql`
 `
 
 export const CREATE_USER = gql`
-  mutation createStaff($status: Status!, $name: String!, $email: String!, $authid: String!) {
-    createStaff(data: {status: $status, name: $name, email: $email, authId: $authid }) {
+  mutation createStaff($status: Status = PUBLISHED, $name: String!, $email: String!, $authId: String!) {
+    createStaff(data: {status: $status, name: $name, email: $email, authId: $authId }) {
       id
       authId
     }

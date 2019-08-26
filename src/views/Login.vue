@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { SIGNIN } from '@/constants/graphql'
+import { SIGNIN, CREATE_USER } from '@/constants/graphql'
 export default {
   components: {},
   data: () => ({}),
@@ -26,15 +26,31 @@ export default {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
         }).join(''))
         const ur = JSON.parse(token)
-        console.log(ur.email, ur.sub, ur.name)
-        this.isSignIn = this.$gAuth.isAuthorized
-        this.apollo.query({
+        // this.isSignIn = this.$gAuth.isAuthorized
+        this.$apollo.query({
           query: SIGNIN,
           variables: {
-            city: 'Hannover'
+            email: ur.email,
+            authId: ur.sub
           }
         }).then(result => {
-          console.log(result)
+          const uEx = result.data.staffs
+          if (Object.entries(uEx).length === 0) {
+            this.$apollo.mutate({
+              // Mutation
+              mutation: CREATE_USER,
+              // Parameters
+              variables: {
+                name: ur.name,
+                email: ur.email,
+                authId: ur.sub
+              }
+            }).then(data => {
+              this.$router.push({ name: 'ListDate' })
+            })
+          } else {
+            this.$router.push({ name: 'ListDate' })
+          }
         })
       })
         .catch(error => {

@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { SIGNIN } from '@/constants/graphql'
 export default {
   components: {},
   data: () => ({}),
@@ -20,14 +21,21 @@ export default {
     redirectAuth: function () {
       this.$gAuth.signIn().then(GoogleUser => {
         const u = GoogleUser.getAuthResponse()
-        console.log(u.id_token)
-        const base64Url = u.id_token.split('.')[1]
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        const base64 = u.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+        const token = decodeURIComponent(atob(base64).split('').map(function (c) {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
         }).join(''))
-        console.log(JSON.parse(jsonPayload))
+        const ur = JSON.parse(token)
+        console.log(ur.email, ur.sub, ur.name)
         this.isSignIn = this.$gAuth.isAuthorized
+        this.apollo.query({
+          query: SIGNIN,
+          variables: {
+            city: 'Hannover'
+          }
+        }).then(result => {
+          console.log(result)
+        })
       })
         .catch(error => {
           console.log(error)

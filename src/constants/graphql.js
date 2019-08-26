@@ -32,3 +32,23 @@ export const UPDATE_WORKING_HOURS = gql`
     }
   }
 `
+
+export const SIGNIN = gql`
+  query signIn($email: String!, $authId: String!) {
+    staffs(where: {authId: $authId, email: $email}) {
+      id
+      name
+      authId
+      createdAt
+    }
+  }
+`
+
+export const CREATE_USER = gql`
+  mutation createStaff($status: Status!, $name: String!, $email: String!, $authid: String!) {
+    createStaff(data: {status: $status, name: $name, email: $email, authId: $authid }) {
+      id
+      authId
+    }
+  }
+`

@@ -5,7 +5,7 @@
       Success
     </v-alert>
     <v-content>
-      <v-tabs v-model="tab" background-color="deep-purple accent-4" class="elevation-2 tab-wrap" dark
+      <v-tabs v-model="tab" background-color="blue" class="elevation-2 tab-wrap" dark 
         :centered="centered"
         :grow="grow"
         :vertical="vertical"
@@ -58,13 +58,6 @@
         </v-tab-item>
       </v-tabs>
     </v-content>
-    <!-- <v-footer>
-      <div class="footer-btn">
-        <v-btn class="ma-2" tile outlined color="success">
-          <v-icon left>mdi-check-bold</v-icon> Save
-        </v-btn>
-      </div>
-    </v-footer> -->
   </div>
 </template>
 
@@ -114,9 +107,6 @@ export default {
       setTimeout(() => {
         this.success = false
       }, 1000)
-    },
-    changed: function (event) {
-      this.$store.commit('change', event.target.value)
     }
   }
 }

@@ -15,8 +15,15 @@
 import { SIGNIN, CREATE_USER } from '@/constants/graphql'
 export default {
   components: {},
-  data: () => ({}),
+  data: () => ({
+    isSignIn: false
+  }),
   name: 'Login',
+  mounted () {
+    if (this.$root.token !== null) {
+      this.$router.push({ name: 'ListDate' })
+    }
+  },
   methods: {
     redirectAuth: function () {
       this.$gAuth.signIn().then(GoogleUser => {
@@ -26,7 +33,6 @@ export default {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
         }).join(''))
         const ur = JSON.parse(token)
-        // this.isSignIn = this.$gAuth.isAuthorized
         this.$apollo.query({
           query: SIGNIN,
           variables: {
@@ -46,10 +52,16 @@ export default {
                 authId: ur.sub
               }
             }).then(data => {
+              localStorage.setItem('user', u.id_token)
+              this.isSignIn = this.$gAuth.isAuthorized
               this.$router.push({ name: 'ListDate' })
+              this.$root.$emit('isLogged', true)
             })
           } else {
+            localStorage.setItem('user', u.id_token)
+            this.isSignIn = this.$gAuth.isAuthorized
             this.$router.push({ name: 'ListDate' })
+            this.$root.$emit('isLogged', true)
           }
         })
       })

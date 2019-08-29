@@ -103,7 +103,7 @@ export default {
           break: this.working.break
         }
       }).then(data => {
-        this.$emit('clicked', 'true')
+        // this.$emit('clicked', 'true')
       })
     }
   },

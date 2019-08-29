@@ -14,12 +14,17 @@ const gauthOption = {
 Vue.use(GAuth, gauthOption)
 Vue.use(vuemoment)
 
+/* get token */
+const to = localStorage.getItem('user')
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   apolloProvider,
   router,
   vuetify,
+  data: {
+    token: to
+  },
   components: { App },
   template: '<App/>'
 })

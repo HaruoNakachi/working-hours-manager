@@ -41,6 +41,7 @@ export default {
           }
         }).then(result => {
           const uEx = result.data.staffs
+
           if (Object.entries(uEx).length === 0) {
             this.$apollo.mutate({
               // Mutation
@@ -52,13 +53,13 @@ export default {
                 authId: ur.sub
               }
             }).then(data => {
-              localStorage.setItem('user', u.id_token)
+              localStorage.setItem('user', data.data.createStaff.id)
               this.isSignIn = this.$gAuth.isAuthorized
               this.$router.push({ name: 'ListDate' })
               this.$root.$emit('isLogged', true)
             })
           } else {
-            localStorage.setItem('user', u.id_token)
+            localStorage.setItem('user', uEx[0].id)
             this.isSignIn = this.$gAuth.isAuthorized
             this.$router.push({ name: 'ListDate' })
             this.$root.$emit('isLogged', true)

@@ -5,20 +5,12 @@
       Success
     </v-alert>
     <v-content>
-      <v-tabs v-model="tab" background-color="blue" class="elevation-2 tab-wrap" dark 
-        :centered="centered"
-        :grow="grow"
-        :vertical="vertical"
-        :right="right"
-        :prev-icon="prevIcon ? 'mdi-arrow-left-bold-box-outline' : undefined"
-        :next-icon="nextIcon ? 'mdi-arrow-right-bold-box-outline' : undefined"
-        :icons-and-text="icons"
-      >
+      <v-tabs v-model="active" color="cyan" dark>
         <v-tabs-slider></v-tabs-slider>
-        <v-tab :href="`#tab-1`">
-          2019/08
+        <v-tab v-for="tab in months" :key="tab" ripple @click="load(tab)">
+          2019/{{ tab }}
         </v-tab>
-        <v-tab-item value="tab-1" class="tab-content">
+        <v-tab-item v-for="tab in months" :key="tab">
           <template>
             <v-container fluid class="table-wrap">
               <div class="table-header">
@@ -45,68 +37,163 @@
                 </v-row>
               </div>
               <div class="table-body">
-                <working-hour
-                  v-for="working in workings"
-                  :key="working.id"
-                  :working="working"
-                  :edit="false"
-                  @clicked="onClickChild">
-                </working-hour>
+                <template v-if="empty">
+                  <div class="no-data">No Data</div>
+                </template>
+                <template v-else>
+                  <working-hour
+                    v-for="working in workings"
+                    :key="working.id"
+                    :working="working"
+                    :edit="false"
+                    @clicked="onClickChild">
+                  </working-hour>
+                  <template v-if="show">
+                    <v-row>
+                      <v-col cols="md-1">
+                        <div class="input-area">
+                          Day <date-picker lang="en" type="date" format="YYYY-MM-DD" v-model="day"></date-picker>
+                        </div>
+                      </v-col>
+                      <v-col cols="md-1">
+                        <div class="input-area">
+                          Start <date-picker lang="en" type="time" format="HH:mm" v-model="start"></date-picker>
+                        </div>
+                      </v-col>
+                      <v-col cols="md-1">
+                        <div class="input-area">
+                          End <date-picker lang="en" type="time" format="HH:mm" v-model="end"></date-picker>
+                        </div>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <div class="input-area">
+                          Break <v-text-field lass="header-text-field-input" v-model="breaks"></v-text-field>
+                          <span class="spect">h</span>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div class="input-area">
+                          Memo <v-text-field class="header-text-field-input" name="memo" v-model="memo"></v-text-field>
+                        </div>
+                      </v-col>
+                      <v-col cols="md-1">
+                        <v-btn small fab @click="addWork">
+                          <v-icon>mdi-check-bold</v-icon>
+                        </v-btn>
+                        <v-btn small fab @click="closeAdd">
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+
+                      </v-col>
+                    </v-row>
+                  </template>
+                </template>
               </div>
             </v-container>
           </template>
         </v-tab-item>
       </v-tabs>
+      <div class="addBtn" >
+        <v-btn small fab @click="showAdd" v-if="!show">
+          <v-icon>mdi-plus-circle-outline</v-icon>
+        </v-btn>
+      </div>
     </v-content>
   </div>
 </template>
 
 <script>
-import { WORKING_HOURS } from '../constants/graphql'
+import { WORKING_HOURS, CREATE_WORKING } from '../constants/graphql'
 import WorkingHour from './WorkingHour'
-
+import moment from 'moment'
+import DatePicker from 'vue2-datepicker'
 export default {
   name: 'ListDate',
   data: () => ({
+    day: null,
+    start: null,
+    end: null,
+    breaks: null,
+    memo: null,
+    active: null,
+    activeM: null,
     loading: 0,
     workings: null,
-    time: [
-      {
-        id: 1,
-        v: '2019/07'
-      },
-      {
-        id: 2,
-        v: '2019/08'
-      }
-    ],
-    tab: null,
-    icons: false,
     centered: false,
-    grow: false,
-    vertical: false,
-    prevIcon: false,
-    nextIcon: false,
-    right: false,
     endDay: '',
-    success: false
+    success: false,
+    months: 12,
+    empty: false,
+    show: false
   }),
   components: {
-    WorkingHour
+    WorkingHour,
+    DatePicker
   },
-  apollo: {
-    $loadingKey: 'loading',
-    workings: {
-      query: WORKING_HOURS
-    }
+  async mounted () {
+    const currentM = new Date()
+    this.active = parseInt(moment(currentM).format('M')) - 1
+    this.activeM = this.active + 1
+    const d = await this.$apollo.query({
+      query: WORKING_HOURS,
+      variables: {
+        month: this.activeM,
+        userId: localStorage.getItem('user')
+      }
+    })
+    this.workings = d.data.workings
   },
-  computed: {},
   methods: {
+    closeAdd () {
+      this.show = false
+    },
+    addWork () {
+      const currentM = new Date()
+      if (this.breaks === null) {
+        this.breaks = ''
+      }
+      if (this.memo === null) {
+        this.memo = ''
+      }
+      this.$apollo.mutate({
+        mutation: CREATE_WORKING,
+        variables: {
+          month: parseInt(moment(currentM).format('M')),
+          day: moment(this.day).format('YYYY-MM-DD'),
+          start: moment(this.start).format('YYYY-MM-DDTHH:mm:ssZ'),
+          end: moment(this.end).format('YYYY-MM-DDTHH:mm:ssZ'),
+          break: this.breaks,
+          memo: this.memo,
+          userId: localStorage.getItem('user')
+        }
+      })
+      // We log the created user ID
+      // console.log(createWorking)
+      this.show = false
+    },
+    showAdd () {
+      this.show = true
+    },
     onClickChild (value) {
       this.success = value
       setTimeout(() => {
         this.success = false
       }, 1000)
+    },
+    async load (v) {
+      const dl = await this.$apollo.query({
+        query: WORKING_HOURS,
+        variables: {
+          month: v
+        }
+      })
+      if (dl.data.workings.length === 0) {
+        this.empty = true
+      } else {
+        this.empty = false
+      }
     }
   }
 }
@@ -114,6 +201,16 @@ export default {
 
 <style lang="scss">
   .p-listDate {
+    .addBtn {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+    }
+    .no-data {
+      font-size: 1rem;
+      text-align: center;
+      padding: 20px;
+    }
     .header-text-field-input {
       padding: 0;
       margin: 0;
@@ -127,6 +224,8 @@ export default {
     .input-area {
       display: flex;
       width: 100%;
+      height: 100%;
+      align-items: center;
       .spect {
         margin: 0 5px;
         display: flex;
@@ -136,6 +235,7 @@ export default {
     .center-line {
       display: flex;
       height: 100%;
+      align-items: center;
     }
     .table {
       &-wrap {

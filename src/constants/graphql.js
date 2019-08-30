@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const WORKING_HOURS = gql`
-  query workings {
-    workings {
+  query workings($month: Int!, $userId: String!) {
+    workings(where: {month: $month, userId: $userId}) {
       id
       day
       start
@@ -29,6 +29,29 @@ export const UPDATE_WORKING_HOURS = gql`
       start
       end
       break
+    }
+  }
+`
+
+export const CREATE_WORKING = gql`
+  mutation createWorking($month: Int!, $memo: String!, $day: DateTime!, $start: DateTime!, $end: DateTime!, $break: String!, $userId: String!) {
+    createWorking(
+      data: {
+        month: $month,
+        day: $day,
+        start: $start,
+        end: $end,
+        break: $break,
+        memo: $memo,
+        userId: $userId
+      }
+    ) {
+      id
+      day
+      start
+      end
+      break
+      memo
     }
   }
 `

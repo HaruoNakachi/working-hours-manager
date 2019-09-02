@@ -48,53 +48,67 @@
                     :edit="false"
                     @clicked="onClickChild">
                   </working-hour>
-                  <template v-if="show">
-                    <v-row>
-                      <v-col cols="md-1">
-                        <div class="input-area">
-                          Day <date-picker lang="en" type="date" format="YYYY-MM-DD" v-model="day"></date-picker>
-                        </div>
-                      </v-col>
-                      <v-col cols="md-1">
-                        <div class="input-area">
-                          Start <date-picker lang="en" type="time" format="HH:mm" v-model="start"></date-picker>
-                        </div>
-                      </v-col>
-                      <v-col cols="md-1">
-                        <div class="input-area">
-                          End <date-picker lang="en" type="time" format="HH:mm" v-model="end"></date-picker>
-                        </div>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <div class="input-area">
-                          Break <v-text-field lass="header-text-field-input" v-model="breaks"></v-text-field>
-                          <span class="spect">h</span>
-                        </div>
-                      </v-col>
-                      <v-col>
-                        <div class="input-area">
-                          Memo <v-text-field class="header-text-field-input" name="memo" v-model="memo"></v-text-field>
-                        </div>
-                      </v-col>
-                      <v-col cols="md-1">
-                        <v-btn small fab @click="addWork">
-                          <v-icon>mdi-check-bold</v-icon>
-                        </v-btn>
-                        <v-btn small fab @click="closeAdd">
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-
-                      </v-col>
-                    </v-row>
-                  </template>
                 </template>
               </div>
             </v-container>
           </template>
         </v-tab-item>
       </v-tabs>
+      <template v-if="show">
+        <v-container>
+          <v-row>
+            <v-col>
+              <div class="input-area">
+                <v-dialog ref="start_dialog" v-model="start_modal" :return-value.sync="start" persistent full-width width="290px">
+                  <template v-slot:activator="{ on }">
+                    <v-text-field label="Start" prepend-icon="access_time" v-model="start" readonly v-on="on"></v-text-field>
+                  </template>
+                  <v-time-picker v-if="start_modal" v-model="start" full-width>
+                    <div class="flex-grow-1"></div>
+                    <v-btn text color="primary" @click="start_modal = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.start_dialog.save(start)">OK</v-btn>
+                  </v-time-picker>
+                </v-dialog>
+              </div>
+            </v-col>
+            <v-col>
+              <div class="input-area">
+                <v-dialog ref="dialog" v-model="end_modal" :return-value.sync="end" persistent full-width width="290px">
+                  <template v-slot:activator="{ on }">
+                    <v-text-field label="End" prepend-icon="access_time" v-model="end" readonly v-on="on"></v-text-field>
+                  </template>
+                  <v-time-picker v-if="end_modal" v-model="end" full-width>
+                    <div class="flex-grow-1"></div>
+                    <v-btn text color="primary" @click="end_modal = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.dialog.save(end)">OK</v-btn>
+                  </v-time-picker>
+                </v-dialog>
+              </div>
+            </v-col>
+            <v-col>
+              <div class="input-area">
+                <v-text-field label="Break" v-model="breaks"></v-text-field>
+                <span class="spect">h</span>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div class="input-area">
+                <v-text-field label="Memo" v-model="memo"></v-text-field>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-btn small fab @click="addWork" class="ml-3 mr-3">
+              <v-icon>mdi-check-bold</v-icon>
+            </v-btn>
+            <v-btn small fab @click="closeAdd" class="ml-3 mr-3">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-row>
+        </v-container>
+      </template>
       <div class="addBtn" >
         <v-btn small fab @click="showAdd" v-if="!show">
           <v-icon>mdi-plus-circle-outline</v-icon>
@@ -126,7 +140,10 @@ export default {
     success: false,
     months: 12,
     empty: false,
-    show: false
+    show: false,
+    time: null,
+    start_modal: false,
+    end_modal: false
   }),
   components: {
     WorkingHour,
@@ -146,24 +163,30 @@ export default {
     this.workings = d.data.workings
   },
   methods: {
+    digSave (e) {
+      this.$refs.dialog.save(e)
+    },
     closeAdd () {
       this.show = false
     },
     addWork () {
       const currentM = new Date()
       if (this.breaks === null) {
-        this.breaks = ''
+        this.breaks = '0'
       }
       if (this.memo === null) {
         this.memo = ''
       }
+      let curDay = moment(currentM).format('YYYY-MM-DD')
+      let curStart = curDay + 'T' + this.start + ':00Z'
+      let curEnd = curDay + 'T' + this.end + ':00Z'
       this.$apollo.mutate({
         mutation: CREATE_WORKING,
         variables: {
           month: parseInt(moment(currentM).format('M')),
-          day: moment(this.day).format('YYYY-MM-DD'),
-          start: moment(this.start).format('YYYY-MM-DDTHH:mm:ssZ'),
-          end: moment(this.end).format('YYYY-MM-DDTHH:mm:ssZ'),
+          day: curDay,
+          start: curStart,
+          end: curEnd,
           break: this.breaks,
           memo: this.memo,
           userId: localStorage.getItem('user')

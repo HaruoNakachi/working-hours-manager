@@ -18,7 +18,7 @@
           </v-dialog>
         </template>
         <template v-else>
-          {{ working.start | moment("HH:ss") }}
+          {{ working.start | moment('HH:mm') }}
         </template>
       </div>
     </v-col>
@@ -37,15 +37,14 @@
           </v-dialog>
         </template>
         <template v-else>
-          {{ working.end | moment("HH:ss") }}
+          {{ working.end | moment('HH:mm') }}
         </template>
       </div>
     </v-col>
     <v-col cols="md-1">
       <div class="input-area">
         <template v-if="openE">
-          <v-text-field
-            class="header-text-field-input" v-model="working.break"
+          <v-text-field label="Break" prepend-icon="access_time" v-model="working.break"
           ></v-text-field>
         </template>
         <template v-else>
@@ -102,7 +101,11 @@ export default {
   },
   methods: {
     subtotal: function (eD, sD, br) {
-
+      if (br === '') {
+        br = 0
+      }
+      const j = parseInt(moment(eD).format('x')) - parseInt(moment(sD).format('x'))
+      return parseInt(j) - (parseInt(br) * 3600000)
     },
     open (obj) {
       this.openE = !this.openE
@@ -111,9 +114,8 @@ export default {
     },
     close (obj) {
       let curDay = moment(obj.day).format('YYYY-MM-DD')
-      let curStart = curDay + 'T' + this.start + ':00Z'
-      let curEnd = curDay + 'T' + this.end + ':00Z'
-      console.log(curEnd)
+      let curStart = curDay + 'T' + this.start + ':00+07:00'
+      let curEnd = curDay + 'T' + this.end + ':00+07:00'
       this.$apollo.mutate({
         // Mutation
         mutation: UPDATE_WORKING_HOURS,
@@ -128,6 +130,8 @@ export default {
       }).then(data => {
         // this.$emit('clicked', 'true')
         this.openE = !this.openE
+        this.working.start = curStart
+        this.working.end = curEnd
       })
     }
   },

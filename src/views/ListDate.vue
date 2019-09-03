@@ -87,7 +87,7 @@
             </v-col>
             <v-col>
               <div class="input-area">
-                <v-text-field label="Break" v-model="breaks"></v-text-field>
+                <v-text-field label="Break" prepend-icon="access_time" v-model="breaks"></v-text-field>
                 <span class="spect">h</span>
               </div>
             </v-col>
@@ -178,8 +178,8 @@ export default {
         this.memo = ''
       }
       let curDay = moment(currentM).format('YYYY-MM-DD')
-      let curStart = curDay + 'T' + this.start + ':00Z'
-      let curEnd = curDay + 'T' + this.end + ':00Z'
+      let curStart = curDay + 'T' + this.start + ':00+07:00'
+      let curEnd = curDay + 'T' + this.end + ':00+07:00'
       this.$apollo.mutate({
         mutation: CREATE_WORKING,
         variables: {
@@ -209,7 +209,8 @@ export default {
       const dl = await this.$apollo.query({
         query: WORKING_HOURS,
         variables: {
-          month: v
+          month: v,
+          userId: localStorage.getItem('user')
         }
       })
       if (dl.data.workings.length === 0) {

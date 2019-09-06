@@ -12,6 +12,19 @@ export const WORKING_HOURS = gql`
     }
   }
 `
+export const CHECK_WORKING = gql`
+  query checkworkings($day: DateTime!, $userId: String!) {
+    workings(where: {day: $day, userId: $userId}) {
+      id
+      day
+      start
+      end
+      memo
+      break
+    }
+  }
+`
+
 export const UPDATE_WORKING_HOURS = gql`
   mutation updateWorking($memo: String!, $id: ID!, $start: DateTime!, $end: DateTime!, $break: String!) {
     updateWorking(

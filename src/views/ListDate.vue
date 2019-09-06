@@ -109,8 +109,8 @@
           </v-row>
         </v-container>
       </template>
-      <div class="addBtn" >
-        <v-btn small fab @click="showAdd" v-if="!show">
+      <div class="addBtn" v-show="showBtn">
+        <v-btn small fab @click="showAdd" >
           <v-icon>mdi-plus-circle-outline</v-icon>
         </v-btn>
       </div>
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { WORKING_HOURS, CREATE_WORKING } from '../constants/graphql'
+import { WORKING_HOURS, CREATE_WORKING, CHECK_WORKING } from '../constants/graphql'
 import WorkingHour from './WorkingHour'
 import moment from 'moment'
 import DatePicker from 'vue2-datepicker'
@@ -141,6 +141,7 @@ export default {
     months: 12,
     empty: false,
     show: false,
+    showBtn: false,
     time: null,
     start_modal: false,
     end_modal: false
@@ -148,6 +149,15 @@ export default {
   components: {
     WorkingHour,
     DatePicker
+  },
+  apollo: {
+    workings: {
+      query: WORKING_HOURS,
+      variables: {
+        month: 9,
+        userId: localStorage.getItem('user')
+      }
+    }
   },
   async mounted () {
     const currentM = new Date()
@@ -161,8 +171,22 @@ export default {
       }
     })
     this.workings = d.data.workings
+    // checking
+    const c = await this.$apollo.query({
+      query: CHECK_WORKING,
+      variables: {
+        day: moment(currentM).format('YYYY-MM-DD'),
+        userId: localStorage.getItem('user')
+      }
+    })
+    if (Object.entries(c.data.workings).length === 0) {
+      this.showBtn = true
+    }
   },
   methods: {
+    refetch () {
+      this.$apollo.queries.workings.refetch()
+    },
     digSave (e) {
       this.$refs.dialog.save(e)
     },
@@ -190,14 +214,24 @@ export default {
           break: this.breaks,
           memo: this.memo,
           userId: localStorage.getItem('user')
-        }
+        },
+        refetchQueries: [
+          {
+            query: WORKING_HOURS,
+            variables: {
+              month: parseInt(moment(currentM).format('M')),
+              userId: localStorage.getItem('user')
+            }
+          }
+        ]
+      }).then(data => {
+        this.show = false
+        this.showBtn = false
       })
-      // We log the created user ID
-      // console.log(createWorking)
-      this.show = false
     },
     showAdd () {
       this.show = true
+      this.showBtn = false
     },
     onClickChild (value) {
       this.success = value

@@ -25,6 +25,19 @@ export const CHECK_WORKING = gql`
   }
 `
 
+export const DETAIL_WORKING = gql`
+  query detailworking($id: ID!) {
+    workings(where: {id: $id}) {
+      id
+      day
+      start
+      end
+      memo
+      break
+    }
+  }
+`
+
 export const UPDATE_WORKING_HOURS = gql`
   mutation updateWorking($memo: String!, $id: ID!, $start: DateTime!, $end: DateTime!, $break: String!) {
     updateWorking(

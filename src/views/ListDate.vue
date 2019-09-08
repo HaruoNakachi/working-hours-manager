@@ -24,13 +24,13 @@
                   <v-col cols="md-2">
                     End at
                   </v-col>
-                  <v-col cols="md-1">
+                  <v-col cols="md-1 d-none d-sm-flex">
                     Break
                   </v-col>
-                  <v-col cols="md-1">
+                  <v-col cols="md-1 d-none d-sm-flex">
                     Subtotal
                   </v-col>
-                  <v-col class="d-none d-md-flex d-lg-flex">
+                  <v-col class="d-none d-sm-flex">
                     Memo
                   </v-col>
                   <v-col cols="md-1"></v-col>

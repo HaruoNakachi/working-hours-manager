@@ -18,7 +18,7 @@ const router = new Router({
       component: ListDate
     },
     {
-      path: '/detail',
+      path: '/list/:id',
       name: 'DetailDate',
       component: DetailDate
     },

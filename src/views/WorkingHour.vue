@@ -1,7 +1,12 @@
 <template>
   <v-row>
     <v-col cols="md-1">
-      <div class="center-line">{{ working.day | moment("M/D") }} (月)</div>
+      <template v-if="openE">
+        <div class="center-line">{{ working.day | moment("M/D") }} (月)</div>
+      </template>
+      <template v-else>
+        <div class="center-line"><router-link :to="{ name: 'DetailDate', params: { id: working.id }}">{{ working.day | moment("M/D") }} (月)</router-link></div>
+      </template>
     </v-col>
     <v-col cols="md-2">
       <div class="input-area">
@@ -41,7 +46,7 @@
         </template>
       </div>
     </v-col>
-    <v-col cols="md-1">
+    <v-col cols="md-1 d-none d-sm-flex">
       <div class="input-area">
         <template v-if="openE">
           <v-text-field label="Break" prepend-icon="access_time" v-model="working.break"
@@ -53,13 +58,13 @@
         <span class="spect">h</span>
       </div>
     </v-col>
-    <v-col cols="md-1">
+    <v-col cols="md-1 d-none d-sm-flex">
       <div class="center-line"> {{ subtotal(working.end, working.start, working.break) | duration('hours') }} h</div>
     </v-col>
-    <v-col class="d-none d-md-flex d-lg-flex">
+    <v-col class="d-none d-sm-flex">
       <div class="input-area">
         <template v-if="openE">
-          <v-text-field class="header-text-field-input" name="memo" v-model="working.memo"></v-text-field>
+          <v-text-field class="header-text-field-input" label="Memo" v-model="working.memo"></v-text-field>
         </template>
         <template v-else>
           {{ working.memo }}
@@ -133,6 +138,9 @@ export default {
         this.working.start = curStart
         this.working.end = curEnd
       })
+    },
+    detail (id) {
+      console.log(id)
     }
   },
   components: { DatePicker }

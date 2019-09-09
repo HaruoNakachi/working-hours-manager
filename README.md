@@ -2,29 +2,30 @@
 
 > A Vue.js project
 
-## Build Setup
+## Setup
+
+1. install [docker-compose](https://docs.docker.com/compose/install/)
+
+2. start docker by docker-compose
+``` bash
+docker-compose up
+```
+
+3. acccess [localhost:8080](http://localhost:8080) after web server starts
+
+## Build docker image
 
 ``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+docker-compose build
 ```
+
+## Run unit tests
+docker-compose run web npm run unit
+
+## Run all tests
+docker-compose run web npm test
+
+## Run e2e tests
+docker-compose run web npm run e2e
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
